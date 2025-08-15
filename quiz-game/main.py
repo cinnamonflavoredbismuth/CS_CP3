@@ -200,16 +200,32 @@ class quiz:
             print("Question added successfully.")
 
 class user:
-    def __init__(self,name='Guest'):
+    def __init__(self,name='Guest',permissions="normal",score=0,questions_answered=0):
         self.name=name
-        self.permissions="normal"  # Default permission level
-        self.score=0
-        self.questions_answered=0
+        self.permissions=permissions  # Default permission level
+        self.score=score
+        self.questions_answered=questions_answered
     
     def __str__(self):
         return f"User: {self.name}, Permissions: {self.permissions}, Score: {self.score}, Questions Answered: {self.questions_answered}"
     
-    def import_user(self,name,file="quiz-game\user_data.csv"):
+    def create_account(self,name=""):
+        if name== "":
+            name = input("Enter your username: ")
+
+        if name=="Guest":
+            print("You cannot use 'Guest' as a username. Please choose another name.")
+            return
+        elif name in self.get_usernames():
+            print(f"Username '{name}' already exists. Please choose a different username.")
+            return
+        else:
+            self.name = name
+            self.export_user()
+            print(f"Account created for {self.name}.")
+            self.import_user(name)
+
+    def import_user(self,name,file="quiz-game/user_data.csv"):
         with open(file,"r",newline="") as file:
             reader=csv.reader(file)
             next(reader)
@@ -225,14 +241,51 @@ class user:
                         self.score=int(row[2])
                         self.questions_answered=int(row[3])
 
-    def export_user(self,file="quiz-game\user_data.csv"):
+    def export_user(self,file="quiz-game/user_data.csv",newline=""):
         with open(file,"a",newline="") as file:
             writer=csv.writer(file)
             writer.writerow([self.name,self.permissions,self.score,self.questions_answered])
 
+    def get_usernames(self,file="quiz-game/user_data.csv"):
+        usernames=[]
+        with open(file,"r",newline="") as file:
+            reader=csv.reader(file)
+            next(reader)
+            for row in reader:
+                if len(row)==0:
+                    pass
+                else:
+                    usernames.append(row[0])
+        return usernames
+    
+    def write(self,accounts=[],file="quiz-game/user_data.csv"):
+        with open(file,"w",newline='') as file:
+            writer=csv.writer(file)
+            writer.writerow(["Username","Permissions","Score","Questions Answered"])
+            writer.writerows(accounts)
+
+    def edit_account(self,file="quiz-game/user_data.csv"):
+        with open(file,"r",newline="") as file:
+            reader=csv.reader(file)
+            accounts=[]
+            next(reader)
+            for row in reader:
+                if len(row)!= 0:
+                    if row[0] == self.name:
+                        account=[self.name, self.permissions, self.score, self.questions_answered]
+                    
+                    else:
+                        try:
+                            account=[row[0], row[1], int(row[2]), int(row[3])]
+                        except ValueError:
+                            account=[row[0], row[1], (row[2]), row[3]]
+                    accounts.append(account)
+            self.write(accounts)
+
     def update_score(self,points):
         self.score += points
         self.questions_answered += 1
+        self.edit_account()
 
     def get_permission(self):
         if self.permissions=="admin":
@@ -240,30 +293,33 @@ class user:
         else:
             return False
         
-    def make_admin(self):
-        password=input('what is the password to make admin? ')
-        if password != "admin123":
-            print("Incorrect password. You are not an admin.")
-            return
+    def make_admin(self,password=""):
+        if self.get_permission() == True:
+            print(f"{self.name} is already an admin.")
         else:
-            self.permissions="admin"
-            print(f"{self.name} is now an admin.")
+            if password == "":
+                password = input('what is the password to make admin? ')
+            if password != "password":
+                print("Incorrect password. You are not an admin.")
+                return
+            else:
+                self.permissions="admin"
+                self.edit_account()
+                print(f"{self.name} is now an admin.")
     
-    def create_account(self):
-        name = input("Enter your username: ")
-        if name=="Guest":
-            print("You cannot use 'Guest' as a username. Please choose another name.")
-            return
-        else:
-            self.name = name
-            self.export_user()
-            print(f"Account created for {self.name}.")
-            self.import_user(name)
 
 
-tester=quiz()
+                
+        
+
+
+#tester=quiz()
 #debug()
 #tester=question("batman","Who is Batman?","Bruce Wayne")
 #print(tester)
-tester.question_gather()
-print(tester.give_question())
+'''tester.question_gather()
+print(tester.give_question())'''
+
+acc=user()
+acc.create_account('cecily')
+acc.make_admin('password')
