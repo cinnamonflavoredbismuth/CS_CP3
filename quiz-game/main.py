@@ -13,11 +13,11 @@ The program needs to run until the user selects to quit
 
 MORE CHALLENGES:
 Create a user interface with tkinter or turtle that lets users click on the answers they want
-Allow users to select from different lists of questions
-Allow users to create lists of questions
-User profiles (Admin users can create new lists of questions, normal users can just select from lists of questions to do)
+X Allow users to select from different lists of questions
+X Allow users to create lists of questions
+X User profiles (Admin users can create new lists of questions, normal users can just select from lists of questions to do)
 Give different point amounts based on how quickly they answer
-Shuffle the order the answers are displayed 
+X Shuffle the order the answers are displayed 
 
 KEY REMINDERS:
 CSV's use a csvreader
@@ -83,10 +83,13 @@ class quiz:
         self.master_questions=master_questions
         self.questions=questions
         self.answers=answers
-        self.question_gather()
+        self.question_gather(topic="all", file="quiz-game/questions.csv")
         self.question_list()
 
     def question_gather(self,topic="all",file="quiz-game/questions.csv"):
+        self.master_questions=[]
+        self.questions=[]
+        self.answers=[]
         with open(file,"r",newline="") as file:
             reader=csv.reader(file)
             next(reader)
@@ -117,19 +120,20 @@ class quiz:
                         topics.append(row[0])
         return topics
     
-    def topic_choice(self):
+    def topic_choice(self,choice=""):
         topics=self.get_topics()
         print("Available topics:")
         for i, topic in enumerate(topics, start=1):
             print(f"{i}. {topic}")
-        choice = input("Select a topic by number or type 'all' for all topics: ")
-        if choice.isdigit() and 1 <= int(choice) <= len(topics):
-            return topics[int(choice) - 1]
-        elif choice.lower() == 'all':
-            return "all"
-        else:
-            print("Invalid choice. Defaulting to 'all'.")
-            return "all"
+        if choice == "":
+            choice = input("Select a topic by number or type 'all' for all topics: ")
+            if choice.isdigit() and 1 <= int(choice) <= len(topics):
+                return topics[int(choice) - 1]
+            elif choice.lower() == 'all':
+                return "all"
+            else:
+                print("Invalid choice. Defaulting to 'all'.")
+                return "all"
 
     def __str__(self):
         for question in self.master_questions:
@@ -141,24 +145,47 @@ class quiz:
             self.questions.append(question.question)
             self.answers.append(question.answer)
         return self.questions, self.answers
+    
     def scramble(self,list):
         random.shuffle(list)
         return list
     
-    def answer_options(self):
-        options=[]
+    def answer_options(self,correct_answer=""):
+        if correct_answer != "":
+            options=[correct_answer]
         while len(options) < 4:
-            question=random.choice(self.answers)
+            try:
+                question=random.choice(self.answers)
+            except IndexError:
+                print("No questions available. Please add questions.")
+                return []
             if question in options:
                 pass
             else:
                 options.append(question)
         return self.scramble(options)
     
-    def give_question(self):
+    def get_question(self,acc):
         question=random.choice(self.master_questions)
-        options=self.answer_options()
-        def valid_check(answer=input(f'{question.question}\nA. {options[0]}\nB. {options[1]}\nC. {options[2]}\nD. {options[3]}\n')):
+        if question.question in acc.questions_answered:
+            return self.get_question(acc)
+        else:
+            acc.questions_answered.append(question.question)
+            acc.edit_account()
+            return question
+
+    def give_question(self,acc): #returns 1 for correct, 0 for incorrect. add to player score
+        question=self.get_question(acc)
+
+        options=self.answer_options(question.answer)
+
+        def choose(prompt): #Temporary. replace with tkinter later
+            ans=input(prompt)
+            return ans
+        
+        def valid_check(answer=""):
+            if answer == "":
+                answer = choose(f'{question.question}\nA. {options[0]}\nB. {options[1]}\nC. {options[2]}\nD. {options[3]}\n')
             try:
                 if answer.lower() == 'a':
                     answer = options[0]
@@ -175,17 +202,14 @@ class quiz:
             except: 
                 print("Error with give question")
                 valid_check()
+
         answer=valid_check()
         if question.answer_check(answer):
             print("Correct!")
-            self.master_questions.pop(self.master_questions.index(question))  # Remove the question from the pool
-            self.questions.remove(question.question)  # Remove the question from the questions list
-            return 1
+            return 1 #returns points added
         else:
             print("Incorrect!")
-            self.master_questions.pop(self.master_questions.index(question))  # Remove the question from the pool
-            self.questions.remove(question.question)  # Remove the question from the questions list
-            return 0
+            return 0 # returns points added
         
     def add_questions(self,user):
         if user.get_permission()==True:
@@ -199,15 +223,28 @@ class quiz:
             new_question.export_question()
             print("Question added successfully.")
 
+    def whole_quiz(self,user):
+        if len(self.answers) - len(user.questions_answered) < 10:
+            user.questions_answered = []
+            user.edit_account()
+        print("Welcome User! You can play the quiz.")
+        score = 0
+        for _ in range(10):
+            print(f"Current Score: {score}\nAnswered Questions: {user.number_answered()}")
+            point=self.give_question(user)
+            score += point
+            user.update_score(score)
+
+
 class user:
-    def __init__(self,name='Guest',permissions="normal",score=0,questions_answered=0):
+    def __init__(self,name='Guest',permissions="normal",score=0,questions_answered=[]):
         self.name=name
         self.permissions=permissions  # Default permission level
         self.score=score
         self.questions_answered=questions_answered
     
     def __str__(self):
-        return f"User: {self.name}, Permissions: {self.permissions}, Score: {self.score}, Questions Answered: {self.questions_answered}"
+        return f"User: {self.name}, Permissions: {self.permissions}, Score: {self.score}, Questions Answered: {(self.questions_answered)}"
     
     def create_account(self,name=""):
         if name== "":
@@ -225,7 +262,9 @@ class user:
             print(f"Account created for {self.name}.")
             self.import_user(name)
 
-    def import_user(self,name,file="quiz-game/user_data.csv"):
+    def import_user(self,name="",file="quiz-game/user_data.csv"):
+        if name == "":
+            name = input("Enter your username to import: ")
         with open(file,"r",newline="") as file:
             reader=csv.reader(file)
             next(reader)
@@ -239,12 +278,24 @@ class user:
                         self.name=row[0]
                         self.permissions=row[1]
                         self.score=int(row[2])
-                        self.questions_answered=int(row[3])
+                        self.questions_answered=[]
+                        if row[3] == "" or row[3] == "0":
+                            self.questions_answered = []
+                        else:
+                            for x in row[3].split(";"):
+                                if x != "":
+                                    self.questions_answered.append(x)
 
     def export_user(self,file="quiz-game/user_data.csv",newline=""):
+        answered=""
+        if len(self.questions_answered) == 0 or answered == 0:
+            answered = "" 
+        else:
+            for x in self.questions_answered:
+                answered += x + ";"
         with open(file,"a",newline="") as file:
             writer=csv.writer(file)
-            writer.writerow([self.name,self.permissions,self.score,self.questions_answered])
+            writer.writerow([self.name,self.permissions,self.score,answered])
 
     def get_usernames(self,file="quiz-game/user_data.csv"):
         usernames=[]
@@ -272,11 +323,17 @@ class user:
             for row in reader:
                 if len(row)!= 0:
                     if row[0] == self.name:
-                        account=[self.name, self.permissions, self.score, self.questions_answered]
+                        answered = ""
+                        if len(self.questions_answered) == 0 or self.questions_answered == 0:
+                            answered = "" 
+                        else:
+                            for x in self.questions_answered:
+                                answered += x + ";"
+                        account=[self.name, self.permissions, self.score,answered]
                     
                     else:
                         try:
-                            account=[row[0], row[1], int(row[2]), int(row[3])]
+                            account=[row[0], row[1], int(row[2]), row[3]]
                         except ValueError:
                             account=[row[0], row[1], (row[2]), row[3]]
                     accounts.append(account)
@@ -284,7 +341,6 @@ class user:
 
     def update_score(self,points):
         self.score += points
-        self.questions_answered += 1
         self.edit_account()
 
     def get_permission(self):
@@ -307,19 +363,48 @@ class user:
                 self.edit_account()
                 print(f"{self.name} is now an admin.")
     
+    def number_answered(self):
+        return f"{len(self.questions_answered)}/10"
+    
+
+def main(acc=user(),game=quiz()):
+    print("Welcome to the Quiz Game!")
+    print("1. Create Account")
+    print("2. Import Account")
+    print("3. Play Quiz")
+    print("4. Add Questions (Admin Only)")
+    print("5. Exit")
+    
+    choice = input("Please select an option: ")
+    
+    if choice == '1':
+        acc.create_account()
+        main(acc,game)
+    elif choice == '2':
+        acc.import_user()
+        main(acc,game)
+    elif choice == '3':
+        game.topic_choice()
+        game.whole_quiz(acc)
+        acc.questions_answered = []
+        acc.edit_account()
+        main(acc,game)
+    elif choice == '4':
+        acc.make_admin()
+        game.add_questions(acc)
+        main(acc,game)
+    elif choice == '5':
+        print("Thank you for playing!")
+        exit()
+    else:
+        print("Invalid choice, please try again.")
+        main(acc,game)
 
 
-                
-        
 
-
-#tester=quiz()
-#debug()
-#tester=question("batman","Who is Batman?","Bruce Wayne")
-#print(tester)
-'''tester.question_gather()
-print(tester.give_question())'''
-
+'''
 acc=user()
-acc.create_account('cecily')
-acc.make_admin('password')
+acc.import_user("cecily")
+'''
+#debug()
+main()
