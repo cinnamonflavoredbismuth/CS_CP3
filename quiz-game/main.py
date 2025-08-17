@@ -26,6 +26,10 @@ Make clear user instructions for how they answer questions
 Don't forget to plan extra debugging time! You can always add more once you have an MVP!"""
 import csv
 import random
+from tkinter import *
+from tkinter import ttk
+
+
 
 def debug():
     import trace
@@ -79,10 +83,11 @@ class question:
             writer.writerow([self.topic,self.question,self.answer])
 
 class quiz:
-    def __init__(self,master_questions=[],questions=[],answers=[]):
+    def __init__(self,master_questions=[],questions=[],answers=[],ans=''):
         self.master_questions=master_questions
         self.questions=questions
         self.answers=answers
+        self.ans=ans
         self.question_gather(topic="all", file="quiz-game/questions.csv")
         self.question_list()
 
@@ -173,19 +178,43 @@ class quiz:
             acc.questions_answered.append(question.question)
             acc.edit_account()
             return question
+        
+    def set_ans(self,ans=""):
+        self.ans = ans
+        
+    def button_interface(self,question, options): #Current problem: The last button inittilized is the one that ans is set to, not the one clicked
+            self.set_ans('')  # Reset ans before using the interface
+            root = Tk()
+            frm = ttk.Frame(root, padding=10)
+            frm.grid()
+            ttk.Label(frm, text=f"{question.question}").grid(column=0, row=0)
+            def buttons(option,col,r):
+                ttk.Button(frm, text=f"{options[option]}", command=(self.set_ans(options[option]))).grid(column=col, row=r) 
+                print(options[option])
+            buttons(0,0,1) # A
+            buttons(1,1,1) # B
+            buttons(2,0,2) # C
+            buttons(3,1,2) # D
+            ttk.Button(frm, text="Submit", command=root.destroy).grid(column=0, row=3, columnspan=4)
+            ttk.Label(frm, text="Select your answer and click Submit.").grid(column=0, row=4, columnspan=4)
+
+            root.mainloop()
 
     def give_question(self,acc): #returns 1 for correct, 0 for incorrect. add to player score
         question=self.get_question(acc)
 
         options=self.answer_options(question.answer)
 
-        def choose(prompt): #Temporary. replace with tkinter later
-            ans=input(prompt)
+        def choose(question,options): #Temporary. replace with tkinter later
+            ans=input(f'{question.question}\nA. {options[0]}\nB. {options[1]}\nC. {options[2]}\nD. {options[3]}\n')
             return ans
         
-        def valid_check(answer=""):
+        self.button_interface(question, options)
+
+        def valid_check(answer="",question=question, options=options):
             if answer == "":
-                answer = choose(f'{question.question}\nA. {options[0]}\nB. {options[1]}\nC. {options[2]}\nD. {options[3]}\n')
+                
+                answer = self.ans.lower()
             try:
                 if answer.lower() == 'a':
                     answer = options[0]
@@ -203,8 +232,9 @@ class quiz:
                 print("Error with give question")
                 valid_check()
 
-        answer=valid_check()
-        if question.answer_check(answer):
+        #answer=valid_check(question=question, options=options)
+        print(self.ans)
+        if question.answer_check(self.ans) == True:
             print("Correct!")
             return 1 #returns points added
         else:
@@ -229,12 +259,12 @@ class quiz:
             user.edit_account()
         print("Welcome User! You can play the quiz.")
         score = 0
-        for _ in range(10):
-            print(f"Current Score: {score}\nAnswered Questions: {user.number_answered()}")
+        for _ in range(11):
+            print(f"nAnswered Questions: {user.number_answered()}")
             point=self.give_question(user)
             score += point
             user.update_score(score)
-
+        print(f"Your final score is: {score}")
 
 class user:
     def __init__(self,name='Guest',permissions="normal",score=0,questions_answered=[]):
@@ -366,7 +396,6 @@ class user:
     def number_answered(self):
         return f"{len(self.questions_answered)}/10"
     
-
 def main(acc=user(),game=quiz()):
     print("Welcome to the Quiz Game!")
     print("1. Create Account")
@@ -407,4 +436,6 @@ acc=user()
 acc.import_user("cecily")
 '''
 #debug()
-main()
+test=quiz()
+test.whole_quiz(user("Cecily","admin",0,[]))
+#main()
