@@ -182,6 +182,7 @@ class quiz:
     def set_ans(self,ans=""):
         self.ans = ans
         
+    ''' 
     def button_interface(self,question, options): #Current problem: The last button inittilized is the one that ans is set to, not the one clicked
             self.set_ans('')  # Reset ans before using the interface
             root = Tk()
@@ -198,7 +199,7 @@ class quiz:
             ttk.Button(frm, text="Submit", command=root.destroy).grid(column=0, row=3, columnspan=4)
             ttk.Label(frm, text="Select your answer and click Submit.").grid(column=0, row=4, columnspan=4)
 
-            root.mainloop()
+            root.update()'''
 
     def give_question(self,acc): #returns 1 for correct, 0 for incorrect. add to player score
         question=self.get_question(acc)
@@ -209,7 +210,7 @@ class quiz:
             ans=input(f'{question.question}\nA. {options[0]}\nB. {options[1]}\nC. {options[2]}\nD. {options[3]}\n')
             return ans
         
-        self.button_interface(question, options)
+        #self.button_interface(question, options)
 
         def valid_check(answer="",question=question, options=options):
             if answer == "":
@@ -232,7 +233,7 @@ class quiz:
                 print("Error with give question")
                 valid_check()
 
-        #answer=valid_check(question=question, options=options)
+        self.ans=valid_check(question=question, options=options)
         print(self.ans)
         if question.answer_check(self.ans) == True:
             print("Correct!")
@@ -397,6 +398,7 @@ class user:
         return f"{len(self.questions_answered)}/10"
     
 def main(acc=user(),game=quiz()):
+    
     print("Welcome to the Quiz Game!")
     print("1. Create Account")
     print("2. Import Account")
@@ -429,13 +431,68 @@ def main(acc=user(),game=quiz()):
         print("Invalid choice, please try again.")
         main(acc,game)
 
+class button():
+    def __init__(self, text, command, col=0, row=0, new_label=""):
+        self.txt = text
+        self.command = command
+        self.col = col
+        self.row = row
+        self.new_label = new_label
 
+    def if_clicked(self,func):
+        print(self.txt)
+        self.command()
+        func.label = self.new_label
+        return func.screen()
+
+    def button_update(self,func):
+        ttk.Button(func.frm, text=self.txt, command=lambda:self.if_clicked(self,func)).grid(column=self.col, row=self.row,columnspan=2)
+        func.frm.update()
+
+class label():
+    def __init__(self, text, col=0, row=0,colspan=1):
+        self.text = text
+        self.col = col
+        self.row = row
+        self.colspan = colspan
+
+    def change_label(self,func):
+        #ttk.Label(self.frm, text=f"                                              ")#.grid(column=0, row=0)
+        ttk.Label(func.frm, text=f"{label}").grid(column=self.col, row=self.row,columnspan=self.colspan)#.grid(column=0,roq=0,columnspan=4)
+        func.frm.update()
+
+
+class outside_window():
+    def __init__(self):
+        self.buttons = [
+            button("Create Account", 0, 1, "Create a new account"),
+            button("Import Account", 2, 1, "Import an existing account"),
+            button("Play Quiz", 0, 2, "Start the quiz game"),
+            button("Add Questions (Admin Only)", 2, 2, "Add new questions to the quiz"),
+            button("Exit", 1, 3, "Exit the game")
+        ]
+        self.labels = [label("Welcome to the Quiz Game!", 0, 0, 4)]
+        self.root = Tk()
+        self.frm = ttk.Frame(self.root, padding=10)
+        self.frm.grid()
+    def screen(self):
+        #self.change_label(self.label)
+        for x in self.labels:
+            x.change_label(self)
+        for x in self.buttons:
+            x.button_update(self)
+    def run(self):
+        self.screen()      
+        self.frm.mainloop()
+    
+    
 
 '''
 acc=user()
 acc.import_user("cecily")
 '''
 #debug()
-test=quiz()
-test.whole_quiz(user("Cecily","admin",0,[]))
+tester=outside_window()
+tester.run()
+#test.whole_quiz(user("Cecily","admin",0,[]))
 #main()
