@@ -190,7 +190,7 @@ class quiz:
             ttk.Label(frm, text=f"{question.question}").grid(column=0, row=0)
             def buttons(option,col,r):
                 ttk.Button(frm, text=f"{options[option]}", command=(self.set_ans(options[option]))).grid(column=col, row=r) 
-                print(options[option])
+                #print(options[option])
             buttons(0,0,1) # A
             buttons(1,1,1) # B
             buttons(2,0,2) # C
