@@ -217,8 +217,8 @@ class quiz:
 
         def valid_check(answer="",question=question, options=options):
             if answer == "":
-                
-                answer = self.ans.lower()
+                answer=choose(question, options)
+                print(answer)
             try:
                 if answer.lower() == 'a':
                     answer = options[0]
@@ -264,7 +264,7 @@ class quiz:
         print("Welcome User! You can play the quiz.")
         score = 0
         for _ in range(11):
-            print(f"nAnswered Questions: {user.number_answered()}")
+            print(f"Answered Questions: {user.number_answered()}")
             point=self.give_question(user)
             score += point
             user.update_score(score)
@@ -474,12 +474,16 @@ class label():
 
     def __str__(self):
         return f"Label: {self.text}, Column: {self.col}, Row: {self.row}, Columnspan: {self.colspan}"
+    
+    def test(self):
+        print('test')
 
     def change_label(self,func):
         #ttk.Label(self.frm, text=f"                                              ")#.grid(column=0, row=0)
         ttk.Label(func.frm, text=f"{self.text}").grid(column=self.col, row=self.row,columnspan=self.colspan)#.grid(column=0,roq=0,columnspan=4)
         func.between_screen()
         func.frm.update()
+        return func
 
 class outside_window():
     def __init__(self,labels=[],buttons=[],acc='', q=''):
@@ -504,8 +508,8 @@ class outside_window():
         
         self.labels = labels
         if self.labels == []: #screen one labels
-            labels=[
-                label("Welcome to the Quiz Game!", 0, 0, 4)
+            self.labels=[
+                label("Welcome to the Quiz Game!", 0, 0, 4),label("Welcome to the Quiz Game!", 0, 0, 4)
                 ]
         
 
@@ -527,21 +531,24 @@ class outside_window():
         #'''
         #print(self.labels)
         #'''
-        for x in self.labels:
-            print(x)
-            try:
-                x.change_label(self)
-            except: pass
+        print(self.labels)
+        for label in self.labels:
+            print(label)
+            #print(type(label))
+            #label.test()
+            #input()
+            #label.change_label(self)
+            '''except:
+                label[0].change_label(self)'''  # Handle the case where label is a list
+            #label.change_label(self)
             #'''
         self.labels = []  # Clear existing labels after displaying them
         for x in self.buttons:
             x.button_update(self)
 
     def run(self):
-        self.screen()      
+        self.screen()
         self.frm.mainloop()
-
-    
 
     def quiz_basics(self):
         question=self.quiz.get_question(self.user)
@@ -569,8 +576,9 @@ acc=user()
 acc.import_user("cecily")
 
 #debug()
+'''
 tester=outside_window(acc=acc)
 tester.quiz_basics()
-tester.run()
+tester.run()'''
 #test.whole_quiz(user("Cecily","admin",0,[]))
-#main()
+main()
