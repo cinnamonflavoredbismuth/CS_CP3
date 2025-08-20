@@ -175,7 +175,10 @@ class quiz:
         if question.question in acc.questions_answered:
             return self.get_question(acc)
         else:
-            acc.questions_answered.append(question.question)
+            if len(self.answers) - len(acc.questions_answered) < 10:
+                acc.questions_answered = []
+            else:
+                acc.questions_answered.append(question.question)
             acc.edit_account()
             return question
         
@@ -439,14 +442,27 @@ class button():
         self.row = row
         self.new_label = new_label
 
+    def __str__(self):
+        return f"Button: {self.txt}, Column: {self.col}, Row: {self.row}, Command: {self.command}"
+    
     def if_clicked(self,func):
-        print(self.txt)
-        self.command()
-        func.label = self.new_label
+        #print(self.txt)
+        try:
+            self.new_label=self.command()
+        except:
+            self.new_label = self.command(func.user)
+        if self.new_label==True:
+            self.new_label=="Correct!"
+        elif self.new_label==False:
+            self.new_label=="Incorrect!"
+        else:
+            self.new_label = f"{self.txt} clicked"
+        func.labels=[] # Clear existing labels
+        func.labels.append(label(self.new_label,0, 1, 4))  # Add new label to the labels list
         return func.screen()
 
     def button_update(self,func):
-        ttk.Button(func.frm, text=self.txt, command=lambda:self.if_clicked(self,func)).grid(column=self.col, row=self.row,columnspan=2)
+        ttk.Button(func.frm, text=self.txt, command=lambda:self.if_clicked(func)).grid(column=self.col, row=self.row,columnspan=2)
         func.frm.update()
 
 class label():
@@ -456,43 +472,105 @@ class label():
         self.row = row
         self.colspan = colspan
 
+    def __str__(self):
+        return f"Label: {self.text}, Column: {self.col}, Row: {self.row}, Columnspan: {self.colspan}"
+
     def change_label(self,func):
         #ttk.Label(self.frm, text=f"                                              ")#.grid(column=0, row=0)
-        ttk.Label(func.frm, text=f"{label}").grid(column=self.col, row=self.row,columnspan=self.colspan)#.grid(column=0,roq=0,columnspan=4)
+        ttk.Label(func.frm, text=f"{self.text}").grid(column=self.col, row=self.row,columnspan=self.colspan)#.grid(column=0,roq=0,columnspan=4)
+        func.between_screen()
         func.frm.update()
 
-
 class outside_window():
-    def __init__(self):
-        self.buttons = [
-            button("Create Account", 0, 1, "Create a new account"),
-            button("Import Account", 2, 1, "Import an existing account"),
-            button("Play Quiz", 0, 2, "Start the quiz game"),
-            button("Add Questions (Admin Only)", 2, 2, "Add new questions to the quiz"),
-            button("Exit", 1, 3, "Exit the game")
-        ]
-        self.labels = [label("Welcome to the Quiz Game!", 0, 0, 4)]
+    def __init__(self,labels=[],buttons=[],acc='', q=''):
+
+        self.user = acc
+        if self.user == '':
+            self.user = user()
+
+        self.quiz = q
+        if self.quiz == '':
+            self.quiz = quiz()
+        self.buttons = buttons
+
+        if self.buttons == []: #screen one buttons
+            self.buttons = [
+                button("Create Account",self.user.create_account, 0, 1, "Create a new account"),
+                button("Import Account", self.user.import_user, 2, 1, "Import an existing account"),
+                button("Play Quiz", self.quiz.whole_quiz, 0, 2, "Start the quiz game"),
+                button("Add Questions (Admin Only)", self.quiz.add_questions, 2, 2, "Add new questions to the quiz"),
+                button("Exit", self.exit, 1, 3, "Exit the game")
+            ]
+        
+        self.labels = labels
+        if self.labels == []: #screen one labels
+            labels=[
+                label("Welcome to the Quiz Game!", 0, 0, 4)
+                ]
+        
+
         self.root = Tk()
         self.frm = ttk.Frame(self.root, padding=10)
         self.frm.grid()
+
+    def __str__(self):
+        return f"Outside Window: User: {self.user.name}, Quiz: {self.quiz.master_questions}"
+
+    def exit(self):
+        print("Thank you for playing!")
+        self.frm.quit()
+        self.frm.destroy()
+
     def screen(self):
         #self.change_label(self.label)
+        #print(self.labels)
+        #'''
+        #print(self.labels)
+        #'''
         for x in self.labels:
-            x.change_label(self)
+            print(x)
+            try:
+                x.change_label(self)
+            except: pass
+            #'''
+        self.labels = []  # Clear existing labels after displaying them
         for x in self.buttons:
             x.button_update(self)
+
     def run(self):
         self.screen()      
         self.frm.mainloop()
-    
+
     
 
-'''
+    def quiz_basics(self):
+        question=self.quiz.get_question(self.user)
+
+        options=self.quiz.answer_options(question.answer)
+        self.labels=[label(question.question,0,0,4)]
+        self.buttons = []
+
+        '''for x in options:
+            for row in range(4):
+                for col in range(2):
+                    self.buttons.append(
+                        button(x, question.answer_check, col, row))'''
+        
+        self.buttons=[button(options[0],question.answer_check, 0, 2),
+        button(options[1], question.answer_check, 2, 2),
+        button(options[2], question.answer_check, 0, 3),
+        button(options[3], question.answer_check, 2, 3)]
+
+    def between_screen(self,new_label=""):
+            self.labels.append([label(f"nAnswered Questions: {self.user.number_answered()}",0,0,4)])
+            self.buttons = [button("continue",self.quiz_basics, 0, 2,new_label)]
+
 acc=user()
 acc.import_user("cecily")
-'''
+
 #debug()
-tester=outside_window()
+tester=outside_window(acc=acc)
+tester.quiz_basics()
 tester.run()
 #test.whole_quiz(user("Cecily","admin",0,[]))
 #main()
