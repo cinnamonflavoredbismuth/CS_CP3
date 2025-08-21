@@ -408,8 +408,12 @@ def main(acc=user(),game=quiz()):
     print("3. Play Quiz")
     print("4. Add Questions (Admin Only)")
     print("5. Exit")
-    
-    choice = input("Please select an option: ")
+    try:
+        choice = int(input("Please select an option: "))
+    except:
+        print("Invalid input. Please enter a number between 1 and 5.")
+        main(acc, game)
+        return
     
     if choice == '1':
         acc.create_account()
@@ -572,8 +576,8 @@ class outside_window():
             self.labels.append([label(f"nAnswered Questions: {self.user.number_answered()}",0,0,4)])
             self.buttons = [button("continue",self.quiz_basics, 0, 2,new_label)]
 
-acc=user()
-acc.import_user("cecily")
+'''acc=user()
+acc.import_user("cecily")'''
 
 #debug()
 '''
