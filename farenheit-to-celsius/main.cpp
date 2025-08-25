@@ -22,7 +22,7 @@ int main(){
     cin >> number;
     float final = (number - 32) / (9.0/5.0);
     //float num_times = 5/9;
-    cout << final << " degrees Celsius";
+    cout << number << " degrees Farenheit is " << final << " degrees Celsius";
 
     //number = cin >> "what";
     return 0;
