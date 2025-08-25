@@ -20,10 +20,9 @@ int main(){
     int number = 0;
     cout << "What tempature in Farenheit do you want to convert to Celsius? ";
     cin >> number;
-    cout << number;
-    (number - 32) * num_times
+    float final = (number - 32) / (9.0/5.0);
     //float num_times = 5/9;
-    cout << '' << " degrees Celsius";
+    cout << final << " degrees Celsius";
 
     //number = cin >> "what";
     return 0;
