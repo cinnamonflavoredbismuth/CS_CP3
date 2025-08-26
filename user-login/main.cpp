@@ -9,17 +9,18 @@ Lets get you signed up Katie*/
 #include <string>
 using namespace std;
 
+
 int main(){
-    string admins[2] = {"cecily","mrs.larose"};
-    string returning_users[2]= {"andrew","john"};
+    string admins[2] = {"Cecily","Mrs. LaRose"};
+    string returning_users[3]= {"Edward","Jon"};
     string username = "";
-    cout << "Enter your username: ";
+    cout << "Enter your username (please capitalize accordingly): " << endl;
     cin >> username;
     int num=0;
     bool found = false;
-    while (found == false && num < 2) {
+    while (found == false && num < 3) {
         if (username == admins[num]) {
-            cout << "Hello Admin " << username;
+            cout << "Hello Admin " << username << endl;
             found = true;
         }
         else if (username == returning_users[num]) {
@@ -27,23 +28,23 @@ int main(){
             found = true;
         }
         else if (num == 1) {
-            string new_user;
-            cout << "Lets get you signed up " << username;
-            cout << "\nPlease enter a new username: ";
-            cin >> new_user;
-            cout << "You are now signed up, " << new_user;
-
-
+            //string new_user;
+            cout << "Lets get you signed up " << username << endl;
+            cout << "Please enter a new username: ";
+            cin >> username;
+            returning_users[3]=(username);
+            cout << "You are now signed up, " << username << endl;
             found = true;
         }
         num++;
     }
-    
-    /*cin >> username;
-    if username in admins {
-        cout << "Hello Admin " << username;
-    } else {
-        cout << "Welcome back " << username;
-    };"*/
+    cout << "Admins:" << endl;
+    for ( int x = 0; x < 2; x++ ) {
+        cout << "   "<< admins[x] << endl;
+    }
+    cout << "Returning Users:" << endl;
+    for ( int x = 0; x < 3; x++ ) {
+        cout << "   "<< returning_users[x] << endl;
+    }
     return 0;
 }
