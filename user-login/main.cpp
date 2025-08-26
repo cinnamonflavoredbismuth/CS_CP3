@@ -36,7 +36,9 @@ int main(){
             cout << "You are now signed up, " << username << endl;
             found = true;
         }
+        else {
         num++;
+        }
     }
     cout << "Admins:" << endl;
     for ( int x = 0; x < 2; x++ ) {
