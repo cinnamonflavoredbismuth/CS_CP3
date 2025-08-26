@@ -23,7 +23,7 @@ using namespace std;
 // How do I modify a string?
     //  .append(), .insert(), .erase(), .replace(), .pop_back(), .push_back(), .clear()
 // What are some string methods? 
-    // .length(), > check alphabetical order, .starts_with(), .ends_with(), .empty(), .front() <= returns the first character, .back() <= returns the last character, .find_first_of(), .find_first_not_of(), find_last_of(), .find_last_not_of()
+    // .length(), > check alphabetical order, .starts_with(), .ends_with(), .empty(), .front() <= returns the first character, .back() <= returns the last character, .find_first_of(), .find_first_not_of(), find_last_of(), .find_last_not_of(), .substr(starting index,how many characters you go)
 
 int random_number(){
     int sec = time(nullptr);
@@ -46,5 +46,6 @@ int main(){
     cout << sentence << endl;
     cout << sentence.length() << endl;
     cout << (sentence > inferior_name) << endl;
+    cout << sentence.substr(0,3) << endl;
     return 0; 
 }
