@@ -12,9 +12,9 @@ using namespace std;
 
 int main(){
     string admins[2] = {"Cecily","Mrs. LaRose"};
-    string returning_users[3]= {"Edward","Jon"};
+    string returning_users[6]= {"Edward","Jon","Jervis","Darius","Waylon"};
     string username = "";
-    cout << "Enter your username (please capitalize accordingly): " << endl;
+    cout << "Enter your name (please capitalize accordingly): " << endl;
     cin >> username;
     int num=0;
     bool found = false;
