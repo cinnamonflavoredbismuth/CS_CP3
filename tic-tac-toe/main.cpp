@@ -8,11 +8,7 @@ using namespace std;
    |   |   |
    |   |   |
    |   |   |*/
-string board[3][3] = { 
-    {" "," "," "}, 
-    {" "," "," "}, 
-    {" "," "," "}
- };
+
 
 auto [a,b,c] = board;
 
@@ -33,19 +29,23 @@ int random_number(int max){
     return my_num;
 }
 
-int prnt_board(auto board){
+int prnt_board(string board[][]){
     for(int row = 0; row < 3; row++){
-        string item[3] = board[row]
-        for (int i = 0; i < 3; i++){
-            cout << item[i] << " ";
+        for (int col = 0; col < 3; col++){
+            cout << board[row][col] << " ";
         }
-        cout << '\n';
+        cout << endl;
     }
-    return 0 
+    return 0;
 }
 
 
 int main(){
+    string board[3][3] = { 
+    {" "," "," "}, 
+    {" "," "," "}, 
+    {" "," "," "}
+};
     prnt_board(board);
     cout << "" ;
     return 0;
