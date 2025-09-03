@@ -410,7 +410,7 @@ def main(acc=user(),game=quiz()):
     print("5. Exit")
     try:
         choice = int(input("Please select an option: "))
-    except:
+    except:   rssssssssssssssssssssssssssssssssssssssssssss
         print("Invalid input. Please enter a number between 1 and 5.")
         main(acc, game)
         return
