@@ -409,8 +409,8 @@ def main(acc=user(),game=quiz()):
     print("4. Add Questions (Admin Only)")
     print("5. Exit")
     try:
-        choice = int(input("Please select an option: "))
-    except:   rssssssssssssssssssssssssssssssssssssssssssss
+        choice = input("Please select an option: ")
+    except:
         print("Invalid input. Please enter a number between 1 and 5.")
         main(acc, game)
         return
