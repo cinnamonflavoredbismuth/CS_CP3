@@ -14,16 +14,16 @@
 
 // °C = (°F - 32) × 5/9
 #include <iostream>
-using namespace std;
+using namespace std;
 
 int main(){
-    int number = 0;
-    cout << "What tempature in Farenheit do you want to convert to Celsius? ";
-    cin >> number;
-    float final = (number - 32) / (9.0/5.0);
+    int number = 0;
+    cout << "What tempature in Farenheit do you want to convert to Celsius? ";
+    cin >> number;
+    float final = (number - 32) / (9.0/5.0);
     //float num_times = 5/9;
-    cout << number << " degrees Farenheit is " << final << " degrees Celsius";
+    cout << number << " degrees Farenheit is " << final << " degrees Celsius";
 
     //number = cin >> "what";
-    return 0;
+    return 0;
 }
