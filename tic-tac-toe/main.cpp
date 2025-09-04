@@ -143,7 +143,7 @@ int win_check(){
 
 int random_number(int max){
     
-    long long sec = time(nullptr);
+    int sec = time(nullptr);
     srand(sec) ;
     int my_num = rand() % (max+1); //generates a number between 0 and the number you put in
     //cout << my_num << endl;
@@ -283,7 +283,7 @@ int play_game(){
 }
 
 int main(){
-    cout << random_number(9);
-    ///play_game();
+    //cout << random_number(9);
+    play_game();
     return 0;
 }
