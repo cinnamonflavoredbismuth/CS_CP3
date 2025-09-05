@@ -239,15 +239,18 @@ int valid_move(int input){
 int computer_move(string player = "O"){
     int move;
     move = random_number(9);
+    cout << move << endl;
     //cout << move <<  endl;
     //cout << valid_move(move) << endl;
     if (valid_move(move) == 1){
-        add_board(player, move);}
-    else{
-        computer_move();}
+        add_board(player, move);
+    }else{
+        computer_move();
+}
+        
     return 0;
 }
-
+// make it so it doesnt run forever 
 int player_move(){
     int move;
     cout << "Enter your move (1-9): ";
@@ -276,7 +279,7 @@ int play_game(){
         computer_move();
         won = win_check();
         draw = draw_check();
-        cout << won << endl;
+        //cout << won << endl;
     }
     cout << won << endl;
     return 0;
