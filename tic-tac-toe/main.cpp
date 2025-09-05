@@ -63,13 +63,11 @@ int win_check(){
                     win = 1;
                     player = 1;
                 break;
-            }
-            else if (a[i] == "O"){
+                }else if (a[i] == "O"){
                     win = 1;
                     player = 2;
                     break;
-                break;}
-                else{
+                }else{
                     win = 0;
                 }
             }else{
@@ -242,11 +240,24 @@ int computer_move(string player = "O"){
     cout << move << endl;
     //cout << move <<  endl;
     //cout << valid_move(move) << endl;
+    for(int i = 0; i < 10; i++){
+        if (valid_move(move) == 1){
+            add_board("O", move);
+            return 0;
+            break;
+        }else{
+            move = random_number(9);
+            
+        }
+    }
+    
+    move++;
     if (valid_move(move) == 1){
-        add_board(player, move);
+    add_board("O", move);
     }else{
         computer_move();
-}
+    }
+
         
     return 0;
 }
@@ -255,14 +266,21 @@ int player_move(){
     int move;
     cout << "Enter your move (1-9): ";
     cin >> move;
-    if (valid_move(move) == 1){
-        add_board("X", move);
-        //prnt_board();
-    }
-    else{
-        cout << "Invalid move, try again" << endl; 
-        player_move();}
-    return 0;
+    for (int i = 0; i < 10; i++){
+        if (valid_move(move) == 1){
+            add_board("X", move);
+            return 0;
+            //prnt_board();
+        }
+        else{
+            cout << "Invalid move, try again" << endl; 
+            cout << "Enter your move (1-9): ";
+            cin >> move;
+            }
+        }
+    cout << "recursion error. restarting" << endl;
+    return 1;
+    
 }
 
 
@@ -272,13 +290,16 @@ int play_game(){
     int draw=0;
     prnt_board();
     while (won == 0 and draw == 0){
-        player_move();
+        if (player_move() == 1){
+            play_game();
+        }else{
         //computer_move("X");
         won = win_check();
         draw = draw_check();
         computer_move();
         won = win_check();
-        draw = draw_check();
+        cout << won << endl;
+        draw = draw_check();}
         //cout << won << endl;
     }
     cout << won << endl;
