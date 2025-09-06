@@ -222,7 +222,7 @@ int computer_move(string player = "O"){
         }else{
             
             move++;
-            cout << move << endl;
+            //cout << move << endl;
         }
     }
     if (valid_move(move) == 1){
@@ -271,11 +271,11 @@ int play_game(){
         draw = draw_check();
         computer_move();
         won = win_check();
-        cout << won << endl;
+        //cout << won << endl;
         draw = draw_check();}
         //cout << won << endl;
     }
-    cout << won << endl;
+    //cout << won << endl;
     return 0;
 }
 
