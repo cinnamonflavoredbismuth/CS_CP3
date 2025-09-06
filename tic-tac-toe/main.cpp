@@ -56,87 +56,61 @@ int draw_check(){
 int win_check(){
     int win = 5;
     int player = 0;
-    while (win == 5){
+    
         for (int i = 0; i < 3; i++){
             if (a[i]==b[i] and b[i]==c[i]){
             if (a[i] == "X"){
-                    win = 1;
-                    player = 1;
-                break;
+                    cout << "You win!\n";
+                    return 1;
+
                 }else if (a[i] == "O"){
                     win = 1;
                     player = 2;
-                    break;
-                }else{
-                    win = 0;
+                    cout << "The computer wins!\n";
+                    return 1;
                 }
-            }else{
-                win = 0;
-            };
+            }
         }
     
 
         for (int i = 0; i < 3; i++){
             if (board[i][0]==board[i][1] and board[i][1]==board[i][2]){
                 if (board[i][0] == "X"){
-                    win = 1;
-                    player = 1;
-                break;}
-                else if (board[i][0] == "O"){
-                    win = 1;
-                    player = 2;
-                    break;
-                    }
-                else{
-                    win = 0;
+                    cout << "You win!\n";
+                    return 1;
                 }
-            }else{
-                win = 0;
-            };}
+                else if (board[i][0] == "O"){
+                    cout << "The computer wins!\n";
+                    return 1;
+                }
+            }
+        }
 
 
         if (board[0][0]==board[1][1] and board[2][2]==board[1][1]){
-            
             if (board[0][0] == "X"){
-                win = 1;
-                player = 1;
-            break;}
+                cout << "You win!\n";
+                    return 1;}
             else if (board[0][0] == "O"){
-                win = 1;
-                player = 2;
-                break;
+                cout << "The computer wins!\n";
+                return 1;
                 }
-            else{
-                win = 0;}
-        }else{
-            win = 0;
-            ;
-        };
+
+        }
 
         if (board[0][2]==board[1][1] and board[0][2]==board[1][1]){
             
             if (board[0][2] == "X"){
-                win = 1;
-                player = 1;
-            break;}
+                cout << "You win!\n";
+                return 1;}
             else if (board[0][2] == "O"){
-                win = 1;
-                player = 2;
-                break;
-                } else{
-                win = 0;
-            }
+                cout << "The computer wins!\n";
+                return 1;
+                }
         }
-    };
+    
 
-    if (win == 1){
-        if (player == 1){
-            cout << "You win!\n";}
-        else{
-            cout << "The computer wins!\n";
-        }
-        return 1;}
-    else{return 0;}
+    return 0;
 }
 
 int random_number(int max){
@@ -237,7 +211,7 @@ int valid_move(int input){
 int computer_move(string player = "O"){
     int move;
     move = random_number(9);
-    cout << move << endl;
+    //cout << move << endl;
     //cout << move <<  endl;
     //cout << valid_move(move) << endl;
     for(int i = 0; i < 10; i++){
@@ -246,12 +220,11 @@ int computer_move(string player = "O"){
             return 0;
             break;
         }else{
-            move = random_number(9);
             
+            move++;
+            cout << move << endl;
         }
     }
-    
-    move++;
     if (valid_move(move) == 1){
     add_board("O", move);
     }else{
