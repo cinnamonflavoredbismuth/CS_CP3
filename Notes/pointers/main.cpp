@@ -15,15 +15,15 @@
 // Why would you pass a pointer to a function?
     // sometimes you have a very large piece of data you need to pass into a function and you don't want to pass all of it in there
 // How do you compare pointers?
-    // 
+    // compaison operators, see if they point to the same location
 // What is dynamic memory allocation?
-    // 
+    // you can overwite how much memory you want to use for an array. delete when done
 // What is the Stack?
-    // 
+    // Stack of plates, last in first out
 // What is the Heap?
-    // 
+    // box of stuff, you have to organize it yourself
 // What are smart pointers?
-    // 
+    // unique: owns that piece of memory. shared:
 #include <iostream>
 using namespace std;
 
@@ -37,6 +37,12 @@ void divide(int* list, int size){
     }
     cout << "this is my numbers list " << *list << endl;
 }
+
+int capacity = 5;
+int* goop = new int[capacity]; // 5 slots for goop levels
+int entries = 0;
+
+
 
 int main(){
 
@@ -64,7 +70,34 @@ int main(){
 
     divide(numbers, size(numbers) );
 
+    cout << (pnum == pday) << endl;
+    cout << (pnum > pday) << endl;
 
+    if (pnum != nullptr){
+        cout << *pnum << endl;
+        pnum++;
+    }
+    cout << *pnum << endl;
+
+    while (true){
+        cout << "Enter a number: ";
+        cin >> goop[entries];
+        if (cin.fail()) break;
+        entries++;
+        if (entries == 5){
+            capacity += 5;
+            int* temp = new int[capacity];
+            for (int i = 0; i < entries; i++)
+                temp[i] = goop[i];
+            delete[] goop;
+            goop = temp;
+        }
+    }
+
+    for (int i = 0; i < entries; i++){
+        cout << goop[i] << ", ";
+    }
+    delete[] goop;
 
     return 0;
 }
