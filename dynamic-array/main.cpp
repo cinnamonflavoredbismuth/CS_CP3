@@ -49,7 +49,7 @@ int main(){
     while (true){
     int exit = 0;
     get_items();
-    print_all(inputs, capacity);
+    print_all(inputs[], capacity);
     cout << "press 1 to exit";
     cin >> exit;
     if (exit == 1) break;
