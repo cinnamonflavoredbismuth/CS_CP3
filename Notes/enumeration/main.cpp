@@ -73,7 +73,7 @@ int main() {
     }else if (input == static_cast<int>(Emu::Update)) {
         cout << "Deciever, deciever, slice thine pantaloons with a cleaver!" << endl;
     }else{
-        cout << "Womp womp." << endl;
+        cout << "Womp womp." << endl; 
     }
     return 0;
 }
