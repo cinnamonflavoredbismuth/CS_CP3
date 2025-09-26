@@ -207,14 +207,20 @@ struct fakemon {
     int level;
     vector<string> attacks;
 };
+struct Player {
+    string name;
+    vector<fakemon> fakemon_collection;
+    int potions;
+};
+
 int choose_fakemon(){
     cout << "Choose your Fakemon:\n1. Flamester (Fire)\n2. Aquatail (Water)\n3. Leafy (Grass)\n4. Rocko (Ground)\n5. Sparky (Electric)" << endl;
     int choice = input();
     return choice;
 }
-void attack_choice(fakemon attack_options){
+void attack_choice(double attack_options[], int amount){
     for (int x; x < 4; x++){
-        cout<<x<<". "<<attack_options[x]<<endl;
+        cout<<x<<". " << attack_options[x]<<endl;
     }
 }
 int calculate_damage(fakemon& attacker, fakemon& defender, int attack_choice){
@@ -240,12 +246,50 @@ bool battle(fakemon attacker, fakemon defender){
         }
     }
 }
-void explore(fakemon player, fakemon encounter){
-    int encounter2 = random_number(4);
+
+// try to make a random player/fakemon function. if not have 5 presets
+Player players[5] = {
+    {"Ash", {{"Pikachu", 100, 100, "Electric", 5, {"Thunder Shock", "Quick Attack", "Electro Ball"}}}, 3},
+    {"Misty", {{"Staryu", 90, 90, "Water", 4, {"Water Gun", "Rapid Spin", "Bubble Beam"}}}, 2},
+    {"Brock", {{"Onix", 120, 120, "Rock/Ground", 6, {"Rock Throw", "Tackle", "Bind"}}}, 4},
+    {"Gary", {{"Eevee", 80, 80, "Normal", 3, {"Tackle", "Tail Whip", "Bite"}}}, 5},
+    {"Jessie", {{"Wobbuffet", 110, 110, "Psychic", 5, {"Counter", "Mirror Coat", "Safeguard"}}}, 1}
+};
+// edit these players
+
+fakemon random_player(){
+    int index = random_number(4);
+    fakemon encounter=players[index].fakemon_collection[0];
+    return encounter;
+}
+
+void battle_player(fakemon player ){
+    fakemon encounter = random_player();
+    double encounter = random_number(4);
+    cout << "Someone has challenged you to a battle!" << endl;
+    
+    double attacker = choose_fakemon();
+    bool outcome = battle(player, encounter);
+    if (outcome == true){
+        cout << "You have defeated the trainer!" << endl;
+        int number = random_number(5);
+        if (number == 1){
+            player.level += 1;
+            cout << player.name << " has leveled up to level " << player.level;
+        }
+        //add fakemon to player's collection
+    }else{
+        cout << "You failed!" << endl;
+    }
+}
+
+void explore(Player player, fakemon encounter){
+    fakemon choice = player.fakemon_collection[0]; // edit later
+    double encounter2 = random_number(4);
     cout << "You explore the area and find a wild Fakemon!" << endl;
     cout << "you have encountered a Wild" << encounter2 << endl;
-    int attacker = choose_fakemon();
-    bool outcome = battle(player, encounter);
+    double attacker = choose_fakemon();
+    bool outcome = battle(choice, encounter);
     if (outcome == true){
         cout << "You have defeated the wild Fakemon!" << endl;
         //add fakemon to player's collection
