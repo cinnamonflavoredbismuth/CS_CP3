@@ -266,7 +266,7 @@ enum MenuOption {
     Exit = 4
 };
 
-int main_menu(){
+int main(){
     Player player = {"Ash", {{"Pikachu", 100, 100, types[4], 5, {{"Exposed wire", 15, types[4]}, {"Static electricity", 20, types[4]}, {"Bzzt", 25, types[4]}}}}};
     while(true){
     cout << "Main Menu:\n"
