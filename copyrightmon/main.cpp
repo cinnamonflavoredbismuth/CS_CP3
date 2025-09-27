@@ -25,7 +25,14 @@ int input(){
     return input;
     }
 
-
+int random_number(int max){
+    
+    int sec = time(nullptr);
+    srand(sec) ;
+    int my_num = rand() % (max+1); //generates a number between 0 and the number you put in
+    //cout << my_num << endl;
+    return my_num;
+}
 
 enum class Fire_attacks{
     Gender_reveal_party = 1,
