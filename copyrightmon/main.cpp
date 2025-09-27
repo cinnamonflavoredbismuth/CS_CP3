@@ -79,8 +79,8 @@ struct Player{
 // Example Fakemon
 Fakemon charmander{
     "Charmander",
-    100,
-    100,
+    50,
+    50,
     types[0], // fire type
     5,
     {{"Ember", 15, types[0]},
@@ -89,8 +89,8 @@ Fakemon charmander{
 };
 Fakemon squirtle{
     "Squirtle",
-    100,
-    100,
+    50,
+    50,
     types[1], // water type
     5,
     {{"Water Gun", 15, types[1]},
@@ -99,8 +99,8 @@ Fakemon squirtle{
 };
 Fakemon bulbasaur{
     "Bulbasaur",
-    100,
-    100,
+    50,
+    50,
     types[2], // grass type
     5,
     {{"Vine Whip", 15, types[2]},
@@ -109,8 +109,8 @@ Fakemon bulbasaur{
 };
 Fakemon pikachu{
     "Pikachu",
-    100,
-    100,
+    50,
+    50,
     types[4], // electric type
     5,
     {{"Exposed wire", 15, types[4]},
@@ -119,8 +119,8 @@ Fakemon pikachu{
 };
 Fakemon geodude{
     "Geodude",
-    100,
-    100,
+    50,
+    50,
     types[3], // ground type
     5,
     {{"Rock Throw", 15, types[3]},
@@ -154,6 +154,7 @@ void calculate_damage(Fakemon &attacker, Fakemon &defender, const Attack &attack
         damage = damage * 8 / 5;
     }
     damage += attacker.level;
+    cout << attacker.name << " used " << attack.name << " and dealt " << damage << " damage to " << defender.name << "!\n";
     defender.current_hp -= damage;
 }
 
@@ -165,14 +166,19 @@ void heal(Player &player){
 }
 
 Fakemon choose_fakemon(Player player){
-    cout << "Choose your Fakemon:\n1. Flamester (Fire)\n2. Aquatail (Water)\n3. Leafy (Grass)\n4. Rocko (Ground)\n5. Sparky (Electric)" << endl;
+    for (int i = 0; i < player.team.size(); i++) {
+        cout << i + 1 << ". ";
+        show_fakemon(player.team[i]);
+    }
     int choice = input();
     Fakemon fakemon_choice = player.team[choice - 1];
     return fakemon_choice;
 }
 Attack attack_chooser(Fakemon fakemon){
-    for (int x; x < 4; x++){
-        cout<<x<<". " << fakemon.attacks[x].name<<endl;
+    cout << "Choose an attack for " << fakemon.name << ":\n";
+    for (int x = 0; x < 3; x++){
+        
+        cout<<x+1<<". " << fakemon.attacks[x].name<<endl;
     }
     int num = input();
     Attack choice = fakemon.attacks[num - 1]; // edit later for multiple fakemon
@@ -187,13 +193,16 @@ Attack random_attack(Fakemon fakemon){
 
 bool battle(Fakemon attacker, Fakemon defender){
     while (attacker.current_hp > 0 and defender.current_hp > 0){
-        
+        cout << defender.name << "'s HP: " << defender.current_hp << "/" << defender.max_hp << endl;
+        cout << attacker.name << "'s HP: " << attacker.current_hp << "/" << attacker.max_hp << endl;
         Attack attack_choice = attack_chooser(attacker);
         calculate_damage(attacker, defender, attack_choice);
         if(defender.current_hp <= 0){
             cout << defender.name << " fainted!" << endl;
             return true;
         }
+        cout << defender.name << "'s HP: " << defender.current_hp << "/" << defender.max_hp << endl;
+        cout << attacker.name << "'s HP: " << attacker.current_hp << "/" << attacker.max_hp << endl;
         calculate_damage(defender, attacker, random_attack(defender));
         if(attacker.current_hp <= 0){
             cout << attacker.name << " fainted!" << endl;
@@ -243,10 +252,12 @@ void battle_player(Player player ){
 }
 
 void explore(Player player){
+    cout << "You explore the area and find a Fakemon!" << endl;
+    
     Fakemon encounter = random_fakemon();
-    Fakemon choice = choose_fakemon(player); // edit later
-    cout << "You explore the area and find a wild Fakemon!" << endl;
-    cout << "you have encountered a Wild" << encounter.name << endl;
+     
+    cout << "you have encountered a Wild " << encounter.name << endl;
+    Fakemon choice = choose_fakemon(player);
     bool outcome = battle(choice, encounter);
     if (outcome == true){
         cout << "You have defeated the wild Fakemon!" << endl;
@@ -267,7 +278,7 @@ enum MenuOption {
 };
 
 int main(){
-    Player player = {"Ash", {{"Pikachu", 100, 100, types[4], 5, {{"Exposed wire", 15, types[4]}, {"Static electricity", 20, types[4]}, {"Bzzt", 25, types[4]}}}}};
+    Player player = {"Ash", {{"Pikachu", 50, 50, types[4], 5, {{"Exposed wire", 15, types[4]}, {"Static electricity", 20, types[4]}, {"Bzzt", 25, types[4]}}}}};
     while(true){
     cout << "Main Menu:\n"
          << "1. Explore\n"
