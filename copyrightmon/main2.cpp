@@ -148,13 +148,119 @@ void heal() {
     }
 
 
-void battle(){
+// RANDOM FUNCTION
 
-};
+#include <ctime>
+#include <chrono>
+#include <thread>
 
-void explore(){
+int random_number(int max){
+    int sec = time(nullptr);
+    this_thread::sleep_for(chrono::seconds(1));
+    srand(sec) ;
+    int my_num = rand() % (max+1); //generates a number between 0 and the number you put in
+    //cout << my_num << endl;
+    return my_num;
+}
 
-};
+
+
+
+Fakemon choose_fakemon(Player player){
+    cout << "Choose your Fakemon:\n1. Flamester (Fire)\n2. Aquatail (Water)\n3. Leafy (Grass)\n4. Rocko (Ground)\n5. Sparky (Electric)" << endl;
+    int choice = input();
+    Fakemon fakemon_choice = player.team[choice - 1];
+    return fakemon_choice;
+}
+Attack attack_chooser(Fakemon fakemon){
+    for (int x; x < 4; x++){
+        cout<<x<<". " << fakemon.attacks[x].name<<endl;
+    }
+    int num = input();
+    Attack choice = fakemon.attacks[num - 1]; // edit later for multiple fakemon
+    return choice;
+}
+
+Attack random_attack(Fakemon fakemon){
+    int num = random_number(2);
+    Attack choice = fakemon.attacks[num];
+    return choice;
+}
+
+bool battle(Fakemon attacker, Fakemon defender){
+    while (attacker.current_hp > 0 and defender.current_hp > 0){
+        
+        Attack attack_choice = attack_chooser(attacker);
+        calculate_damage(attacker, defender, attack_choice);
+        if(defender.current_hp <= 0){
+            cout << defender.name << " fainted!" << endl;
+            return true;
+        }
+        calculate_damage(defender, attacker, random_attack(defender));
+        if(attacker.current_hp <= 0){
+            cout << attacker.name << " fainted!" << endl;
+            return false;
+        }
+    }
+}
+
+// try to make a random player/fakemon function. if not have 5 presets
+
+
+// edit these players
+
+Fakemon random_player(){
+    Player players[5] = {
+        {"Ash", {charmander, squirtle, bulbasaur}},
+        {"Misty", {squirtle, pikachu, geodude}},
+        {"Brock", {geodude, bulbasaur, charmander}},
+        {"Gary", {pikachu, charmander, squirtle}},
+        {"Jessie", {bulbasaur, geodude, pikachu}}
+    };
+    int index = random_number(4);
+    Fakemon encounter=players[index].team[random_number(players[index].team.size() - 1)];
+    return encounter;
+}
+
+Fakemon random_fakemon(){
+    int index = random_number(4);
+    Fakemon encounter=wild_fakemon[index];
+    return encounter;
+}
+
+void battle_player(Player player ){
+    cout << "Someone has challenged you to a battle!" << endl;
+    Fakemon encounter = random_player();
+    Fakemon attacker = choose_fakemon(player);
+    bool outcome = battle(attacker, encounter);
+    if (outcome == true){
+        cout << "You have defeated the trainer!" << endl;
+        int number = random_number(5);
+        if (number == 1){
+            attacker.level += 1;
+            cout << player.name << " has leveled up to level " << attacker.level;
+        }
+        //add fakemon to player's collection
+    }else{
+        cout << "You failed!" << endl;
+    }
+}
+
+void explore(Player player){
+    Fakemon encounter = random_player();
+    Fakemon choice = choose_fakemon(player); // edit later
+    cout << "You explore the area and find a wild Fakemon!" << endl;
+    cout << "you have encountered a Wild" << encounter.name << endl;
+    bool outcome = battle(choice, encounter);
+    if (outcome == true){
+        cout << "You have defeated the wild Fakemon!" << endl;
+        //add fakemon to player's collection
+    }else{
+        cout << "You failed!" << endl;
+    }
+
+
+}
 
 
 enum MenuOption {
@@ -172,9 +278,9 @@ int main_menu(){
          << "4. Exit\n";
     int choice = input();
     if (choice == MenuOption::Explore) {
-        explore();
+        explore(player);
     } else if (choice == MenuOption::Battle) {
-        battle();
+        battle(player.team[0], random_player());
     } else if (choice == MenuOption::Heal) {
         heal();
     } else if (choice == MenuOption::Exit) {
