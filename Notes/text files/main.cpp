@@ -96,27 +96,30 @@ int main(){
     //READ
     ifstream ifile;
     ifile.open("data.csv");
-    string str;
+    string line;
     vector<Movie> movies;
     if (ifile.is_open()){
-        while(!ifile.eof()){
-            getline(ifile, str,',');
-                if (str.empty()) continue;;
+        getline(ifile, line); //skip header line
+        while(getline(ifile,line)){
+            istringstream iss(line);
+            string item;
             Movie movie;
-            movie.id = stoi(str);
 
-            getline(ifile, str,',');
-            movie.title = str;
+            getline(iss, item,',');
+            movie.id = stoi(item);
 
-            getline(ifile, str,',');
-            movie.year = stoi(str);
+            getline(iss, item,',');
+            movie.title = item;
+
+            getline(iss, item,',');
+            movie.year = stoi(item);
 
             movies.push_back(movie);
         }
         file.close();
     }
     for (Movie i:movies){
-            cout << "Title: " << i.title << "Year: " << i.year << endl;
+            cout << "Title: " << i.title << ", Year: " << i.year << endl;
         }
         
     return 0;
