@@ -19,18 +19,19 @@ How does controlling the string conversion process benefit your program?
 Give an example scenario where parsing a string would be necessary in a program.
     putting a csv line into an object
 When writing to a binary file, what does the first parameter (reinterpret_cast<char*>(&numbers)) represent?
-
+    convert binary to characters
 Why does the binary file only take 12 bytes while the array of integers might be larger?
-
+    binary files by definition take less space
 What is the main difference between sequential search and binary search?
-
+    One after another vs dividing in half
 In which type of data structure is binary search most efficient?
-
+    any sort of list
 What is a key requirement for binary search to work correctly on a list?
-
+    it has to be ordered !!
 How does sequential search find an item in a list?
-
+    it goes to the middle if its bigger or smaller, and goes left or right accordingly
 Why is binary search generally faster than sequential search for large, sorted lists?
+    it eliminates half the list each time
 
 */
 #include <iostream>
@@ -84,7 +85,7 @@ int main(){
 
     cout << "first: " << first << endl << "second: " << second << endl;
 
-    auto movie = challenge( "A New Hope,1977");
+    auto movie = challenge("A New Hope,1977");
     cout << "Title: " << movie.title << endl << "Year: " << movie.year << endl;
 
     fstream file;
