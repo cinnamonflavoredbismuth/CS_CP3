@@ -9,6 +9,7 @@ The search menu should allow the user to select what they would like to search b
 #include <fstream>
 #include <iomanip>
 #include <vector>
+#include <string>
 
 using namespace std;
 
@@ -116,6 +117,8 @@ enum SearchOption {
     Rating
 };
 
+
+
 vector<Movie> search_movies(const vector<Movie>& movies, SearchOption option, const string& value){
     vector<Movie> results;
     for (const Movie& movie : movies) {
@@ -171,12 +174,17 @@ int main(){
     vector<Movie> movies;
     string filename;
     while (true) {
-    cout << "What is your Movie Library?" << endl;
+    
+    cout << "What is your Movie Library? type 'none' for default" << endl;
     cin >> filename;
+    if (filename == "none"){
+        filename = "movies.csv";
+    }
     movies = read(filename);
     if (movies.empty()){
-        cout << "No movies found in the library. Starting with an empty library.\n\n";
+        cout << "No movies found in the library. Try again.\n\n";
     }
+
     else break;}
     int choice = 0;
     while (choice != Exit){
@@ -203,7 +211,7 @@ int main(){
                 cout << "Search by:\n1. Title\n2. Director\n3. Year\n4. Genre\n5. Rating\nEnter your choice: ";
                 search_choice = input();
                 cout << "Enter search value: ";
-                cin.ignore();
+                cin >> search_value;
                 getline(cin, search_value);
                 {
                     vector<Movie> results = search_movies(movies, static_cast<SearchOption>(search_choice), search_value);
