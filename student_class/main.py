@@ -10,6 +10,7 @@ Print each object (note that means you will need a __str__ method), change the g
 
 
 class Student:
+    """This is a student, it has an ID and a name, as well as a grade. There is a method to change and display grades"""
     def __init__(self,id = 100,name = "John Doe",grade = 100):
         self.id = id
         self.name = name
