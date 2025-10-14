@@ -60,5 +60,10 @@
         "stop_token": "cpp",
         "thread": "cpp",
         "fstream": "cpp"
-    }
+    },
+    "python.testing.pytestArgs": [
+        "Notes"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true
 }
