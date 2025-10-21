@@ -62,7 +62,6 @@
         "fstream": "cpp"
     },
     "python.testing.pytestArgs": [
-        "Notes"
     ],
     "python.testing.unittestEnabled": false,
     "python.testing.pytestEnabled": true
