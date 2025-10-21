@@ -6,7 +6,7 @@ def IceCream_test():
     assert item.scoop_count==0
     assert item.price_per_scoop==0.0
 
-    item=Cookie("cheetos",1,1)
+    item=IceCream("cheetos",1,1)
     assert item.name == "cheetos"
     assert item.scoop_count==1
     assert item.price_per_scoop==1

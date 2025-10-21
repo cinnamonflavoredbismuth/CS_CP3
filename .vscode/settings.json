@@ -61,8 +61,7 @@
         "thread": "cpp",
         "fstream": "cpp"
     },
-    "python.testing.pytestArgs": [
-    ],
+    "python.testing.pytestArgs": ["CS_CP3"],
     "python.testing.unittestEnabled": false,
     "python.testing.pytestEnabled": true
 }

@@ -8,7 +8,7 @@ def Sundae_test():
     assert item.topping_name == ''
     assert item.topping_price == 0.0
 
-    item=Cookie("cheetos",1,1,'orange',1)
+    item=Sundae("cheetos",1,1,'orange',1)
     assert item.name == "cheetos"
     assert item.scoop_count==1
     assert item.price_per_scoop==1
