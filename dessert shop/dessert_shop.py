@@ -1,5 +1,5 @@
 #CS Dessert Shop
-from dessery import *
+from dessert import *
 def main():
     order=Order([])
     order.add(Candy("Sucker",5,2))
