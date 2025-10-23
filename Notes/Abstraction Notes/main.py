@@ -13,7 +13,7 @@ What is an abstract method?
 What is a concrete method?
     a normal method
 What is an abstract class?
-    A placeholder/ghost class (no objects. exists only to be a parent class). must have at least 1 abstract method
+    A placeholder/ghost class (no objects. exis00000000000000000000..................................................................ts only to be a parent class). must have at least 1 abstract method
 How do you make an abstract method?
     @abstractmethod
     def ...
