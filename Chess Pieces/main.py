@@ -1,7 +1,35 @@
 #CS Chess Pieces
+'''Follow the provided class diagram exactly 
+Implement ChessPiece as an abstract class 
+Create all six concrete piece classes (Pawn, Rook, Knight, Bishop, Queen, King) 
+Implement canMoveTo(), getSymbol() methods 
+Create ChessGame class with whitePieces and blackPieces lists 
+Implement movePiece(), removePiece(), getPiecesLeft(), and getPieceAt() in ChessGame 
+Create correct number of pieces for each player 
+Set up pieces in starting positions 
+Demonstrate moving 5 different pieces 
+Implement basic move validation for each piece type 
+Use removePiece() method for capturing 
+Put each class in its own file 
+Add comments to explain your code 
+Test each piece type for correct movement 
+Focus on core functionality over advanced game logic'''
 from abc import ABC, abstractmethod
 
-board=[ [],
+board=[ ['','','','','','','',''], # 0
+        ['','a','b','c','d','e','f','g','h'], # 1
+        ['','a','b','c','d','e','f','g','h'], # 2
+        ['','a','b','c','d','e','f','g','h'], # 3
+        ['','a','b','c','d','e','f','g','h'], # 4
+        ['','a','b','c','d','e','f','g','h'], # 5
+        ['','a','b','c','d','e','f','g','h'], # 6
+        ['','a','b','c','d','e','f','g','h'], # 7
+        ['','a','b','c','d','e','f','g','h']  # 8
+       ]
+print(board[0])
+
+def try_except(a,b):
+    board=[ ['','','','','','','',''], # 0
         ['','a','b','c','d','e','f','g','h'], # 1
         ['','a','b','c','d','e','f','g','h'], # 2
         ['','a','b','c','d','e','f','g','h'], # 3
@@ -12,8 +40,15 @@ board=[ [],
         ['','a','b','c','d','e','f','g','h']  # 8
        ]
 
+    try:
+        board[a][b]
+        return True
+    except:
+        return False
+
 class ChessPiece:
-    def __init__(self,color='',letter=0,number=0,board=[ 
+    def __init__(self,color='',letter=0,number=0,board=[
+        ['','','','','','','',''], # 0
         ['','a','b','c','d','e','f','g','h'], # 1
         ['','a','b','c','d','e','f','g','h'], # 2
         ['','a','b','c','d','e','f','g','h'], # 3
@@ -26,8 +61,10 @@ class ChessPiece:
         self.color=color
         self.letter = letter
         self.number = number
-        self.position=board[number][letter]
         self._board=board
+        
+        self.position=self._board[number][letter]
+    
     def getPosition(self):
         return self.position
     
@@ -91,10 +128,17 @@ class Knight(ChessPiece):
 
     def canMoveTo(self,NewPos):
         canGo=[]
+        nums={'a':[1,2,-1,-2],
+              'b':[1,2,-1,-2]}
         canGo.append(self._board[self.number-2][self.letter-1])
         canGo.append(self._board[self.number-2][self.letter+1])
         canGo.append(self._board[self.number+2][self.letter-1])
         canGo.append(self._board[self.number+2][self.letter+1])
+        
+        canGo.append(self._board[self.number-1][self.letter-2])
+        canGo.append(self._board[self.number-1][self.letter+2])
+        canGo.append(self._board[self.number+1][self.letter-2])
+        canGo.append(self._board[self.number+1][self.letter+2])
 
         if NewPos in canGo:
             return True
@@ -184,6 +228,7 @@ class King(ChessPiece):
         canGo.append(self._board[self.number][self.letter-1])
     
         canGo.append(self._board[self.number-1][self.letter])
+    
 
         if NewPos in canGo:
             return True
@@ -195,23 +240,57 @@ class King(ChessPiece):
         elif self.color == 'black':
             return 'bq'
         else: return 'q'
-
+#'''
 class ChessGame:
-    def __init__(self,whitePieces=[],blackPieces=[]):
+    def __init__(self,
+    whitePieces=[Rook('white',1,1),Knight('white',2,1),Bishop('white',3,1),Queen('white',4,1),King('white',5,1),Bishop('white',6,1),Knight('white',7,1),Rook('white',8,1),Pawn('white',1,2),Pawn('white',2,2),Pawn('white',3,2),Pawn('white',4,2),Pawn('white',5,2),Pawn('white',6,2),Pawn('white',7,2),Pawn('white',8,2)],
+    blackPieces=[Rook('black',1,8),Knight('black',2,8),Bishop('black',3,8),Queen('black',4,8),King('black',5,8),Bishop('black',6,8),Knight('black',7,8),Rook('black',8,8),Pawn('black',1,7),Pawn('black',2,7),Pawn('black',3,7),Pawn('black',4,7),Pawn('black',5,7),Pawn('black',6,7),Pawn('black',7,7),Pawn('black',8,7)]
+    ):
         self.whitePieces=whitePieces
         self.blackPieces=blackPieces
-    def movePiece(self,piece=ChessPiece(),NewPos=''):
+    def removePiece(self,piece=ChessPiece()):
+        piece.position=piece._board[0][0]
+        return
+    def movePiece(self,piece=ChessPiece(),NewPos=board[0][0]):
         if piece.canMoveTo(NewPos) == True:
             for x in self.blackPieces:
                 if x.position == NewPos:
-                    print('You can not move there')
-                    return
+                    print(f"{piece.color} piece captured {x.color}'s {x.getSymbol()}")
+                    self.removePiece(x)
             for x in self.whitePieces:
                 if x.position == NewPos:
-                    print('You can not move there')
-                    return
+                    print(f"{piece.color} piece captured {x.color}'s {x.getSymbol()}")
+                    self.removePiece(x)
             piece.position = NewPos
             return
         else:
             print('You can not move there')
             return
+        
+    def getPiecesLeft(self,color):
+        if color == 'white':
+            pieces=self.whitePieces
+        elif color == 'black':
+            pieces=self.blackPieces
+        else: pieces=[]
+        for x in pieces:
+            if x.position == x._board[0][0]:
+                pass
+            else:
+                print(x.getSymbol())
+        else:
+            return 0
+    
+
+
+
+
+
+game=ChessGame()
+game.movePiece(game.whitePieces[0],'a4')
+game.movePiece(game.blackPieces[1],'b6')
+game.movePiece(game.whitePieces[2],'b6')
+game.movePiece(game.whitePieces[3],'d3')
+
+
+#'''
