@@ -52,7 +52,7 @@ class ChessPiece:
     def try_except(self,a,b):
 
         try:
-            board[a][b]
+            self._board[a][b]
             return True
         except:
             return False
@@ -231,7 +231,7 @@ class King(ChessPiece):
 class ChessGame:
     def __init__(self,
     whitePieces=[Rook('white',1,1),Knight('white',2,1),Bishop('white',3,1),Queen('white',4,1),King('white',5,1),Bishop('white',6,1),Knight('white',7,1),Rook('white',8,1),Pawn('white',1,2),Pawn('white',2,2),Pawn('white',3,2),Pawn('white',4,2),Pawn('white',5,2),Pawn('white',6,2),Pawn('white',7,2),Pawn('white',8,2)],
-    blackPieces=[Rook('black',1,8),Knight('black',2,8),Bishop('black',3,8),Queen('black',4,8),King('black',5,8),Bishop('black',6,8),Knight('black',7,8),Rook('black',8,8),Pawn('black',1,7),Pawn('black',2,7),Pawn('black',3,7),Pawn('black',4,7),Pawn('black',5,7),Pawn('black',6,7),Pawn('black',7,7),Pawn('black',8,7)]
+    blackPieces=[Rook('black',1,8),Knight('black',2,8),Bishop('black',3,8),Queen('black',4,8),King('black',5,8),Bishop('black',6,8),Knight('black',7,8),Rook('black',8,8),Pawn('black',1,7),Pawn('black',2,7),Pawn('black',3,7),Pawn('black',4,7),Pawn('black',5,7),Pawn('black',6,7),Pawn('black',7,7),Pawn('black',8,7)],
     ):
         self.whitePieces=whitePieces
         self.blackPieces=blackPieces
@@ -285,6 +285,16 @@ class ChessGame:
 
 
 def main():
+    board=[ ['','','','','','','',''], # 0
+        ['','a','b','c','d','e','f','g','h'], # 1
+        ['','a','b','c','d','e','f','g','h'], # 2
+        ['','a','b','c','d','e','f','g','h'], # 3
+        ['','a','b','c','d','e','f','g','h'], # 4
+        ['','a','b','c','d','e','f','g','h'], # 5
+        ['','a','b','c','d','e','f','g','h'], # 6
+        ['','a','b','c','d','e','f','g','h'], # 7
+        ['','a','b','c','d','e','f','g','h']  # 8
+       ]
     game=ChessGame()
     game.movePiece(game.whitePieces[0],board[4][1])
     game.movePiece(game.blackPieces[1],board[3][2])
@@ -295,5 +305,5 @@ def main():
     game.getPieceAt(board[3][2])
     game.removePiece(game.blackPieces[1])
     game.getPiecesLeft('black')
-    
+
 main()
