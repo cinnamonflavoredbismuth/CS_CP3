@@ -284,16 +284,16 @@ class ChessGame:
 
 
 
-
-game=ChessGame()
-game.movePiece(game.whitePieces[0],board[4][1])
-game.movePiece(game.blackPieces[1],board[3][2])
-game.movePiece(game.whitePieces[2],board[5][3])
-game.movePiece(game.whitePieces[3],board[4][4])
-game.movePiece(game.blackPieces[4],board[4][4])
-print(f'{game.whitePieces[3].getSymbol()} is at {game.whitePieces[3].position}')
-game.getPieceAt(board[3][2])
-game.removePiece(game.blackPieces[1])
-game.getPiecesLeft('black')
-
-#'''
+def main():
+    game=ChessGame()
+    game.movePiece(game.whitePieces[0],board[4][1])
+    game.movePiece(game.blackPieces[1],board[3][2])
+    game.movePiece(game.whitePieces[2],board[5][3])
+    game.movePiece(game.whitePieces[3],board[4][4])
+    game.movePiece(game.blackPieces[4],board[4][4])
+    print(f'{game.whitePieces[3].getSymbol()} is at {game.whitePieces[3].position}')
+    game.getPieceAt(board[3][2])
+    game.removePiece(game.blackPieces[1])
+    game.getPiecesLeft('black')
+    
+main()
