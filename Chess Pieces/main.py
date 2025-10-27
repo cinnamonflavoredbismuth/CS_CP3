@@ -26,25 +26,9 @@ board=[ ['','','','','','','',''], # 0
         ['','a','b','c','d','e','f','g','h'], # 7
         ['','a','b','c','d','e','f','g','h']  # 8
        ]
-print(board[0])
+#print(board[0])
 
-def try_except(a,b):
-    board=[ ['','','','','','','',''], # 0
-        ['','a','b','c','d','e','f','g','h'], # 1
-        ['','a','b','c','d','e','f','g','h'], # 2
-        ['','a','b','c','d','e','f','g','h'], # 3
-        ['','a','b','c','d','e','f','g','h'], # 4
-        ['','a','b','c','d','e','f','g','h'], # 5
-        ['','a','b','c','d','e','f','g','h'], # 6
-        ['','a','b','c','d','e','f','g','h'], # 7
-        ['','a','b','c','d','e','f','g','h']  # 8
-       ]
 
-    try:
-        board[a][b]
-        return True
-    except:
-        return False
 
 class ChessPiece:
     def __init__(self,color='',letter=0,number=0,board=[
@@ -64,7 +48,15 @@ class ChessPiece:
         self._board=board
         
         self.position=self._board[number][letter]
-    
+
+    def try_except(self,a,b):
+
+        try:
+            board[a][b]
+            return True
+        except:
+            return False
+        
     def getPosition(self):
         return self.position
     
@@ -107,9 +99,11 @@ class Rook(ChessPiece):
 
         canGo=[]
         for x in range(8):
-            canGo.append(self._board[self.number][x])
+            if self.try_except(self.number+x,self.letter) != False:
+                canGo.append(self._board[self.number+x][self.letter])
         for x in range(8):
-            canGo.append(self._board[x][self.letter])
+            if self.try_except(self.number,self.letter+x) != False:
+                canGo.append(self._board[self.number][self.letter+x])
 
         if NewPos in canGo:
             return True
@@ -128,17 +122,10 @@ class Knight(ChessPiece):
 
     def canMoveTo(self,NewPos):
         canGo=[]
-        nums={'a':[1,2,-1,-2],
-              'b':[1,2,-1,-2]}
-        canGo.append(self._board[self.number-2][self.letter-1])
-        canGo.append(self._board[self.number-2][self.letter+1])
-        canGo.append(self._board[self.number+2][self.letter-1])
-        canGo.append(self._board[self.number+2][self.letter+1])
-        
-        canGo.append(self._board[self.number-1][self.letter-2])
-        canGo.append(self._board[self.number-1][self.letter+2])
-        canGo.append(self._board[self.number+1][self.letter-2])
-        canGo.append(self._board[self.number+1][self.letter+2])
+        board=[[self.number-2,self.letter-1],[self.number-2,self.letter+1],[self.number+2,self.letter-1],[self.number+2,self.letter+1],[self.number-1,self.letter-2],[self.number-1,self.letter-2],[self.number-1,self.letter+2],[self.number+1,self.letter-2],[self.number+1,self.letter-2],[self.number+1,self.letter+2]]
+        for x in board:
+            if self.try_except(x[0],x[1]) != False:
+                    canGo.append(self._board[x[0]][x[1]])
 
         if NewPos in canGo:
             return True
@@ -158,13 +145,13 @@ class Bishop(ChessPiece):
     def canMoveTo(self,NewPos):
         canGo=[]
         for x in range(8):
-            canGo.append(self._board[self.number+x][self.letter+x])
+            if self.try_except(self.number+x,self.letter+x) != False: canGo.append(self._board[self.number+x][self.letter+x])
         for x in range(8):
-            canGo.append(self._board[self.number-x][self.letter+x])
+            if self.try_except(self.number-x,self.letter+x) != False: canGo.append(self._board[self.number-x][self.letter+x])
         for x in range(8):
-            canGo.append(self._board[self.number+x][self.letter-x])
+            if self.try_except(self.number+x,self.letter-x) != False: canGo.append(self._board[self.number+x][self.letter-x])
         for x in range(8):
-            canGo.append(self._board[self.number-x][self.letter-x])
+            if self.try_except(self.number-x,self.letter-x) != False: canGo.append(self._board[self.number-x][self.letter-x])
 
         if NewPos in canGo:
             return True
@@ -184,17 +171,17 @@ class Queen(ChessPiece):
     def canMoveTo(self,NewPos):
         canGo=[]
         for x in range(8):
-            canGo.append(self._board[self.number+x][self.letter+x])
+            if self.try_except(self.number+x,self.letter+x) != False: canGo.append(self._board[self.number+x][self.letter+x])
         for x in range(8):
-            canGo.append(self._board[self.number-x][self.letter+x])
+            if self.try_except(self.number-x,self.letter+x) != False: canGo.append(self._board[self.number-x][self.letter+x])
         for x in range(8):
-            canGo.append(self._board[self.number+x][self.letter-x])
+            if self.try_except(self.number+x,self.letter-x) != False: canGo.append(self._board[self.number+x][self.letter-x])
         for x in range(8):
-            canGo.append(self._board[self.number-x][self.letter-x])
+            if self.try_except(self.number-x,self.letter-x) != False: canGo.append(self._board[self.number-x][self.letter-x])
         for x in range(8):
-            canGo.append(self._board[self.number][x])
+            if self.try_except(self.number,x) != False: canGo.append(self._board[self.number][x])
         for x in range(8):
-            canGo.append(self._board[x][self.letter])
+            if self.try_except(x,self.letter) != False:canGo.append(self._board[x][self.letter])
 
         if NewPos in canGo:
             return True
@@ -213,21 +200,21 @@ class King(ChessPiece):
         
     def canMoveTo(self,NewPos):
         canGo=[]
-        canGo.append(self._board[self.number+1][self.letter+1])
+        if self.try_except(self.number+1,self.letter+1) != False: canGo.append(self._board[self.number+1][self.letter+1])
     
-        canGo.append(self._board[self.number-1][self.letter+1])
+        if self.try_except(self.number-1,self.letter+1) != False: canGo.append(self._board[self.number-1][self.letter+1])
     
-        canGo.append(self._board[self.number+1][self.letter-1])
+        if self.try_except(self.number+1,self.letter-1) != False:   canGo.append(self._board[self.number+1][self.letter-1])
     
-        canGo.append(self._board[self.number-1][self.letter-1])
+        if self.try_except(self.number-1,self.letter-1) != False: canGo.append(self._board[self.number-1][self.letter-1])
     
-        canGo.append(self._board[self.number][self.letter+1])
+        if self.try_except(self.number,self.letter+1) != False: canGo.append(self._board[self.number][self.letter+1])
     
-        canGo.append(self._board[self.number+1][self.letter])
+        if self.try_except(self.number+1,self.letter1) != False:    canGo.append(self._board[self.number+1][self.letter])
 
-        canGo.append(self._board[self.number][self.letter-1])
+        if self.try_except(self.number,self.letter-1) != False: canGo.append(self._board[self.number][self.letter-1])
     
-        canGo.append(self._board[self.number-1][self.letter])
+        if self.try_except(self.number-1,self.letter) != False: canGo.append(self._board[self.number-1][self.letter])
     
 
         if NewPos in canGo:
@@ -280,6 +267,18 @@ class ChessGame:
                 print(x.getSymbol())
         else:
             return 0
+        
+    def getPieceAt(self,position=board[0][0]):
+        for x in self.whitePieces:
+            if x.position == position:
+                print(f'At {position} is white {x.getSymbol()}')
+                return
+        for x in self.blackPieces:
+            if x.position == position:
+                print(f'At {position} is black {x.getSymbol()}')
+                return
+        print(f'At {position} is no piece')
+        return
     
 
 
@@ -287,10 +286,14 @@ class ChessGame:
 
 
 game=ChessGame()
-game.movePiece(game.whitePieces[0],'a4')
-game.movePiece(game.blackPieces[1],'b6')
-game.movePiece(game.whitePieces[2],'b6')
-game.movePiece(game.whitePieces[3],'d3')
-
+game.movePiece(game.whitePieces[0],board[4][1])
+game.movePiece(game.blackPieces[1],board[3][2])
+game.movePiece(game.whitePieces[2],board[5][3])
+game.movePiece(game.whitePieces[3],board[4][4])
+game.movePiece(game.blackPieces[4],board[4][4])
+print(f'{game.whitePieces[3].getSymbol()} is at {game.whitePieces[3].position}')
+game.getPieceAt(board[3][2])
+game.removePiece(game.blackPieces[1])
+game.getPiecesLeft('black')
 
 #'''
