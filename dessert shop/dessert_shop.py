@@ -8,19 +8,20 @@ data = [["Bruce Wayne","Batman",3957208537],
         ["Barry Allen","Flash",1], 
         ["J'onn J'onzz","Unemployed",32]]
 #print(tabulate.tabulate(data, headers=["name","job","number"]))
-def int_input():
+def int_input(message="Enter a number: "):
     while True:
         try:
-            num=int(input("Enter a number: "))
+            print(message)
+            num=int(input(message))
             break
         except:
             print("Invalid input. Please enter a valid integer.")
     return num
 
-def float_input():
+def float_input(message="Enter a number: "):
     while True:
         try:
-            num=float(input("Enter a number: "))
+            num=float(input(message))
             break
         except:
             print("Invalid input. Please enter a valid number.")
@@ -60,6 +61,8 @@ def main():
             topping_name=input("Enter the topping name: ")
             topping_price=float_input("Enter the topping price: ")
             sundae=Sundae(name,scoops,price,topping_name,topping_price)
+            print("successfully added")
+            
             order.add(sundae)
         if dessert == 5:
             break
