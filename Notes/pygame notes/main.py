@@ -11,7 +11,7 @@ How are objects placed on the screen in pygame?
 What events can I listen for in pygame? What do those events do?
     exit, keypress, mouse click, mouse movement
 How can I detect collision with pygame?
-   
+    
 How do you add sounds in pygame?
     pygame.mixer.sound.play(pygame.mixer.Sound('soundfile.wav'))
 """
